@@ -8,7 +8,7 @@ import androidx.room.Update
 import com.example.todo.database.models.entity.Task
 
 @Dao
-interface TaskDeo {
+interface TaskDao {
     @Insert
     fun insertNewTask(task: Task)
 
