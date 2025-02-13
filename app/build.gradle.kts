@@ -1,7 +1,11 @@
+@file:Suppress("DEPRECATION")
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kapt)
+    id("com.google.devtools.ksp")
+
 }
 
 android {
@@ -54,7 +58,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core.v351)
     // Room DataBase
     implementation(libs.androidx.room.runtime)
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
+
     //calendarView
     implementation(libs.material.calendarview)
     //SwipeLayout

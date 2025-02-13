@@ -3,4 +3,10 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kapt) apply false
+    id("com.google.devtools.ksp") version "2.0.21-1.0.27" apply false
+}
+buildscript{
+    dependencies{
+        classpath("com.android.tools.external.org-jetbrains:uast:31.8.0")
+    }
 }

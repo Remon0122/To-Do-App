@@ -20,7 +20,6 @@ class HomeActivity : AppCompatActivity() {
         setNavigation()
     }
 
-
     private fun setNavigation() {
         binding.fabAddTask.setOnClickListener {
             val bottomSheet = AddTaskFragment()
@@ -30,10 +29,12 @@ class HomeActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.tasks -> {
                     pushFragment(tasksFragment)
+                    binding.title.text = getString(R.string.add_task_title)
                 }
 
                 R.id.settings -> {
                     pushFragment(settingsFragment)
+                    binding.title.text = getString(R.string.settings)
                 }
             }
             return@setOnItemSelectedListener true
@@ -46,6 +47,5 @@ class HomeActivity : AppCompatActivity() {
             .beginTransaction()
             .replace(binding.content.fragmentContainer.id, fragment)
             .commit()
-
     }
 }
