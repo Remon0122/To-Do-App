@@ -1,13 +1,16 @@
 package com.example.todo.database.models.entity
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.time.LocalDateTime
 
 @Entity("tasks")
 data class Task(
-    var id: Int? = null,
-    var title: String? = null,
-    var details: String? = null,
-    var date: LocalDateTime? = null,
-    var isDone: Boolean = false
+    @PrimaryKey(autoGenerate = true)
+    val id:Int=0,
+    var title:String,
+    var description:String? = null,
+    var date:Long,
+    var time:Long,
+    var isDone :Boolean = false,
 )
