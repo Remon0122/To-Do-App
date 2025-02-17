@@ -54,6 +54,10 @@ class TasksFragment : Fragment() {
     private fun initRecyclerView() {
         binding.rvTasks.adapter = adapter
 
+        adapter.onDeleteBtnClickListener = TaskAdapter.OnTaskClickListener { position, task ->
+            dao.deleteTask(task)
+            adapter.deleteTask(position,task)
+        }
     }
 
     override fun onStart() {

@@ -18,15 +18,15 @@ interface TaskDao {
     @Update
     fun updateTask(task: Task)
 
-    @Query("select * from tasks")
+    @Query("select * from task")
     fun getAllTasks():List<Task>
 
-    @Query("select * from tasks where date = :date")
+    @Query("select * from task where date = :date")
     fun getAllTasksByDate(date:Long):List<Task>
 
-    @Query("select * from tasks where id = :id")
+    @Query("select * from task where id = :id")
     fun getTaskById(id:Int): Task?
 
-    @Query("select * from tasks where isDone = 0")
+    @Query("select * from task where isDone = 0")
     fun getUnCompletedTasks():List<Task>
 }

@@ -67,7 +67,7 @@ class AddTaskFragment : BottomSheetDialogFragment() {
     }
     fun OnAddTaskClick (){
         binding.addTaskBtn.setOnClickListener {
-            if (ValiDateInput())
+            if (!validateInput())
                 return@setOnClickListener
 
             val task = createTask()
@@ -86,22 +86,21 @@ class AddTaskFragment : BottomSheetDialogFragment() {
             description = binding.description.text.toString())
     }
 
-    fun ValiDateInput():Boolean{
-        var isValidate = true
-
+    fun validateInput():Boolean{
+        var isValid = true
         if (binding.title.text.isNullOrBlank()){
-            isValidate = false
+            isValid = false
             binding.titleTil.error = getString(R.string.isrequired)
         }
-        if (binding.description.error.isNullOrBlank()){
-            isValidate = false
-            binding.descriptionTil.error = getString(R.string.isrequired)
+        if (binding.selectDateTv.text.isNullOrBlank()){
+            isValid = false
+            binding.selectDateTil.error = getString(R.string.isrequired)
         }
         if (binding.selectTimeTv.text.isNullOrBlank()){
-            isValidate = false
+            isValid = false
             binding.selectTimeTil.error = getString(R.string.isrequired)
         }
-        return isValidate
+        return isValid
     }
 
     fun interface OnTaskAdded{

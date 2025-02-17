@@ -13,7 +13,9 @@
         android:theme="@style/Base.Theme.ToDo"
         android:name="com.example.todo.ui.MyApplication"
         tools:targetApi="31">
-        <activity android:name="com.example.todo.ui.home.HomeActivity" />
+        <activity android:name="com.example.todo.ui.home.HomeActivity"
+            android:exported="false"
+            />
         <activity
             android:name="com.example.todo.ui.splash.SplashActivity"
             android:exported="true">

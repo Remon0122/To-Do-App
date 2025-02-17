@@ -18,6 +18,13 @@ class TaskAdapter: RecyclerView.Adapter<TaskAdapter.TaskViewHolder>(){
         tasksList = tasks
         notifyDataSetChanged()
     }
+    fun deleteTask(position: Int,task: Task){
+        if(position in tasksList.indices){
+            tasksList.removeAt(position)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position,tasksList.size-position)
+        }
+    }
 
     class TaskViewHolder(val binding: ItemTaskBinding):RecyclerView.ViewHolder(binding.root){
         fun bind(task:Task){
@@ -39,6 +46,17 @@ class TaskAdapter: RecyclerView.Adapter<TaskAdapter.TaskViewHolder>(){
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = tasksList[position]
         holder.bind(task)
+
+        onDeleteBtnClickListener.let {
+            holder.binding.liftView.setOnClickListener {
+                onDeleteBtnClickListener?.OnClick(position, task)
+            }
+        }
+    }
+    var onDeleteBtnClickListener : OnTaskClickListener ?= null
+
+    fun interface OnTaskClickListener {
+        fun OnClick(position: Int,task: Task)
     }
 
 }
