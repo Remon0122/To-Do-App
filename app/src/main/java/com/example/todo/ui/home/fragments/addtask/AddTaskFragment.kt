@@ -1,6 +1,7 @@
 package com.example.todo.ui.home.fragments.addtask
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,10 +45,11 @@ class AddTaskFragment : BottomSheetDialogFragment() {
 
     private fun onSelectDateCalender() {
         binding.selectDateTv.setOnClickListener{
+            //compare
             showDatePickerDialog(requireContext()) { date, calender ->
                 binding.selectDateTv.text = date
                 dateCalendar.set(Calendar.YEAR, calender.get(Calendar.YEAR))
-                dateCalendar.set(Calendar.MONTH, calender.get(Calendar.MONTH))
+                dateCalendar.set(Calendar.MONTH, calender.get(Calendar.MONTH - 2))
                 dateCalendar.set(Calendar.DAY_OF_MONTH, calender.get(Calendar.DAY_OF_MONTH))
                 dateCalendar.clearTime()
             }
@@ -72,8 +74,10 @@ class AddTaskFragment : BottomSheetDialogFragment() {
 
             val task = createTask()
             dao.insertNewTask(task)
+            Log.e("TAG","$task")
             onTaskAdded?.onAddTask(task)
-
+            dao.getAllTasks()
+            Log.e("TAG","${dao.getAllTasks()}")
             dismiss()
         }
 

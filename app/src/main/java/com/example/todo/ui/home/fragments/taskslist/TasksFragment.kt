@@ -18,12 +18,13 @@ class TasksFragment : Fragment() {
 
     lateinit var binding: FragmentTasksBinding
     private val adapter = TaskAdapter()
+
     private lateinit var dao: TaskDao
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentTasksBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -35,17 +36,18 @@ class TasksFragment : Fragment() {
         initCalendarView()
     }
 
+
     private fun initCalendarView() {
         binding.calendarView.selectedDate = CalendarDay.today()
         binding.calendarView.setOnDateChangedListener { _, date, selected ->
             val calendar = Calendar.getInstance()//current time
+            //compare
             calendar.set(Calendar.YEAR,date.year)
             calendar.set(Calendar.MONTH,date.month-1)
             calendar.set(Calendar.DAY_OF_MONTH,date.day)
             calendar.clearTime()
             if (selected){
                 val tasks = dao.getAllTasksByDate(calendar.timeInMillis).toMutableList()
-                Log.e("TAG", "initCalendarView: $tasks", )
                 adapter.setTasksList(tasks)
             }
         }
@@ -53,7 +55,6 @@ class TasksFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.rvTasks.adapter = adapter
-
         adapter.onDeleteBtnClickListener = TaskAdapter.OnTaskClickListener { position, task ->
             dao.deleteTask(task)
             adapter.deleteTask(position,task)
@@ -63,7 +64,6 @@ class TasksFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         loadAllTasksOfDate(getSelectedDate().timeInMillis)
-
     }
 
     private fun loadAllTasksOfDate(date: Long) {
@@ -73,10 +73,8 @@ class TasksFragment : Fragment() {
 
     private fun getSelectedDate():Calendar{
         val calendar = Calendar.getInstance()
-        if (binding.calendarView.selectedDate != null){
-            calendar.set(Calendar.YEAR, binding.calendarView.selectedDate!!.year)
-        }
         binding.calendarView.selectedDate?.let { date->
+            //compare
             calendar.set(Calendar.YEAR, date.year)
             calendar.set(Calendar.MONTH, date.month-1)
             calendar.set(Calendar.DAY_OF_MONTH, date.day)

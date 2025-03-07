@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">Список дел</string>
+    <string name="to_do_list">Список дел</string>
+    <string name="tasks">Задачи</string>
+    <string name="settings">Настройки</string>
+    <string name="enter_your_task">Введите вашу задачу</string>
+    <string name="enter_task_description">Введите описание задачи</string>
+    <string name="select_date">Выбрать дату</string>
+    <string name="select_time">Выбрать время</string>
+    <string name="title">Заголовок</string>
+    <string name="description">Описание</string>
+    <string name="add_new_task">Добавить новую задачу</string>
+    <string name="add_task_title">Пожалуйста, введите заголовок</string>
+    <string name="add_task_date">Пожалуйста, выберите дату</string>
+    <string name="add_task_time">Пожалуйста, выберите время</string>
+    <string name="edit_task">Редактировать задачу</string>
+    <string name="save">Сохранить</string>
+    <string name="language">Язык</string>
+    <string name="mode">Режим</string>
+    <string name="light">Светлый</string>
+    <string name="dark">Тёмный</string>
+    <string name="english">Английский</string>
+    <string name="arabic">Арабский</string>
+    <string name="isrequired">Обязательно</string>
+    <string name="Russian">Русский</string>
+    <!-- Languages Array -->
+    <string-array name="languages">
+        <item>Английский</item>
+        <item>Арабский</item>
+        <item>Русский</item>
+    </string-array>
+
+    <!-- Modes Array -->
+    <string-array name="modes">
+        <item>Светлый</item>
+        <item>Тёмный</item>
+    </string-array>
+</resources>
