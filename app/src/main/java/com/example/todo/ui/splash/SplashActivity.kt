@@ -14,7 +14,6 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_splash)
         Handler(mainLooper).postDelayed({ startHomeActivity() }, 2000)
     }

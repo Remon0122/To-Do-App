@@ -1,17 +1,17 @@
 package com.example.todo.ui.home
 
-import android.nfc.Tag
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.example.todo.database.models.entity.Task
 import com.example.todo.ui.home.fragments.addtask.AddTaskFragment
 import com.example.todo.ui.home.fragments.settings.SettingsFragment
 import com.example.todo.ui.home.fragments.taskslist.TasksFragment
 import com.route.todo.R
 import com.route.todo.databinding.ActivityHomeBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
     lateinit var binding: ActivityHomeBinding
     private var currentFragmentTag : String ?= null
@@ -42,10 +42,10 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setNavigation() {
         binding.bottomNavigationView.setOnItemSelectedListener { menuItem->
-            if (menuItem.itemId ==R.id.tasks){
+            if (menuItem.itemId == R.id.tasks){
                 showFragment(TasksFragment(), "Tasks_Fragment")
                 binding.title.text = getString(R.string.to_do_list)
-            }else if (menuItem.itemId ==R.id.settings){
+            }else if (menuItem.itemId == R.id.settings){
                 showFragment(SettingsFragment(),"Settings_Fragment")
                 binding.title.text = getString(R.string.settings)
             }
@@ -75,6 +75,5 @@ class HomeActivity : AppCompatActivity() {
                 //reload data in recyclerview in TasksFragment
             }
         }
-
     }
 }

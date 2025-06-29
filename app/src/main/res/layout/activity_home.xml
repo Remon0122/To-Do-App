@@ -47,8 +47,8 @@
             android:background="@android:color/transparent"
             app:itemActiveIndicatorStyle="@null"
             app:itemBackground="@null"
-                    app:elevation="0dp"
-        app:itemIconTint="@color/selector_btm_nav_icon"
+            app:elevation="0dp"
+            app:itemIconTint="@color/selector_btm_nav_icon"
             app:labelVisibilityMode="unlabeled"
             app:menu="@menu/nav_menu" />
 

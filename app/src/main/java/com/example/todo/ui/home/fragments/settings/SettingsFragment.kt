@@ -8,21 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.Fragment
-import com.example.todo.ui.home.HomeActivity
-import com.example.todo.ui.home.fragments.taskslist.TasksFragment
+import androidx.fragment.app.viewModels
+import com.example.todo.ui.home.fragments.HomeViewModel.SettingsViewModel
 import com.example.todo.ui.util.Constants
-import com.example.todo.ui.util.applyModeChange
 import com.route.todo.R
 import com.route.todo.databinding.FragmentSettingsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class SettingsFragment : Fragment() {
 
     private lateinit var binding: FragmentSettingsBinding
     private lateinit var sharedPreferences : SharedPreferences
-    private lateinit var homeActivity: HomeActivity
+
+    private val viewModel: SettingsViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,6 +35,8 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedPreferences = requireContext().getSharedPreferences(Constants.SH_NAME,Context.MODE_PRIVATE)
+
+        observeViewModel()
     }
 
     override fun onStart() {
@@ -51,18 +53,40 @@ class SettingsFragment : Fragment() {
         setInitialModeState()
     }
 
-    private fun setLanguageDropDownMenu() {
-        val languages = resources.getStringArray(R.array.languages).toList()
-        val adapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, languages)
-        binding.autoCompleteTVLanguages.setAdapter(adapter)
-    }
 
+    private fun observeViewModel(){
+        viewModel.languageCode.observe(viewLifecycleOwner){ langCode ->
+            val languageTextRes = when (langCode) {
+                Constants.ENGLISH_CODE -> R.string.english
+                Constants.ARABIC_CODE -> R.string.arabic
+                Constants.RUSSIAN_CODE -> R.string.Russian
+                else -> R.string.english
+            }
+            binding.autoCompleteTVLanguages.setText(getString(languageTextRes), false)
+        }
+        viewModel.isDarkMode.observe(viewLifecycleOwner) { isDark ->
+            val modeTextRes = if (isDark) R.string.dark else R.string.light
+            binding.autoCompleteTVModes.setText(getString(modeTextRes), false)
+        }
+    }
     private fun setModeDropDownMenu() {
         val modes = resources.getStringArray(R.array.modes).toList()
         val adapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, modes)
         binding.autoCompleteTVModes.setAdapter(adapter)
     }
-
+    private fun setModeDropDownMenuListener() {
+        binding.autoCompleteTVModes.setOnItemClickListener { _, _, position, _ ->
+            val selectedMode = binding.autoCompleteTVModes.adapter.getItem(position).toString()
+            binding.autoCompleteTVModes.setText(selectedMode)
+            val isDark = selectedMode == getString(R.string.dark)
+            viewModel.setMode(isDark)
+        }
+    }
+    private fun setLanguageDropDownMenu() {
+        val languages = resources.getStringArray(R.array.languages).toList()
+        val adapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, languages)
+        binding.autoCompleteTVLanguages.setAdapter(adapter)
+    }
     private fun setLanguageDropDownMenuListener() {
         binding.autoCompleteTVLanguages.setOnItemClickListener { _, _, position, _ ->
             val selectedLanguage = binding.autoCompleteTVLanguages.adapter.getItem(position).toString()
@@ -74,28 +98,7 @@ class SettingsFragment : Fragment() {
                 getString(R.string.Russian) -> Constants.RUSSIAN_CODE
                 else -> Constants.ENGLISH_CODE
             }
-            applyLanguageChange(languageCode)
-        }
-    }
-
-    private fun applyLanguageChange(languageCode: String) {
-        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode))
-    }
-
-    private fun setModeDropDownMenuListener() {
-        binding.autoCompleteTVModes.setOnItemClickListener { _, _, position, _ ->
-            val selectedMode = binding.autoCompleteTVModes.adapter.getItem(position).toString()
-            binding.autoCompleteTVModes.setText(selectedMode)
-            val isDark = selectedMode == getString(R.string.dark)
-            applyModeChange(isDark)
-            saveModeToSharedPreferences(isDark)
-        }
-    }
-
-    private fun saveModeToSharedPreferences(isDark: Boolean) {
-        with(sharedPreferences.edit()){
-            putBoolean(Constants.Task_Key,isDark)
-            apply()
+            viewModel.setLanguage(languageCode)
         }
     }
 

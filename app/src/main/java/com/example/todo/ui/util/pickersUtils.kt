@@ -7,19 +7,16 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import java.util.Calendar
 
-fun showDatePickerDialog(context: Context,callback:(String,Calendar) -> Unit){
+fun showDatePickerDialog(context: Context, callback: (String, Calendar) -> Unit) {
     val dialog = DatePickerDialog(context)
     dialog.datePicker.minDate = System.currentTimeMillis()
-    dialog.setOnDateSetListener{picker ,year,month,day->
-
-        val calender = Calendar.getInstance()
-        calender.set(Calendar.YEAR,year)
-        calender.set(Calendar.MONTH,month)
-        calender.set(Calendar.DAY_OF_YEAR,day)
-        calender.clearTime()
-        callback( "$day/${month+1}/$year",calender)
-
-
+    dialog.setOnDateSetListener { _, year, month, day ->
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month)
+        calendar.set(Calendar.DAY_OF_MONTH, day)
+        calendar.clearTime()
+        callback("$day/${month + 1}/$year", calendar)
     }
     dialog.show()
 }

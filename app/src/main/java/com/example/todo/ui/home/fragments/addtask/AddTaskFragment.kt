@@ -5,10 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.todo.database.models.MyDatabase
+import androidx.lifecycle.lifecycleScope
 import com.example.todo.database.models.dao.TaskDao
 import com.example.todo.database.models.entity.Task
-import com.example.todo.ui.util.clearDate
 import com.example.todo.ui.util.clearSeconds
 import com.example.todo.ui.util.clearTime
 import com.example.todo.ui.util.getFormattedTime
@@ -17,27 +16,32 @@ import com.example.todo.ui.util.showTimePickerDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.route.todo.R
 import com.route.todo.databinding.FragmentAddTaskBinding
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.Calendar
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AddTaskFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentAddTaskBinding
+    @Inject
     lateinit var dao : TaskDao
     private var dateCalendar = Calendar.getInstance()
     private var timeCalender = Calendar.getInstance()
+    private val calendar = Calendar.getInstance()
     var  onTaskAdded : OnTaskAdded ?= null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentAddTaskBinding.inflate(inflater)
+        binding = FragmentAddTaskBinding.inflate(inflater,container,false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dao = MyDatabase.getInstance().taskDao()
         onSelectDateCalender()
         onSelectTimeCalender()
         OnAddTaskClick()
@@ -49,7 +53,7 @@ class AddTaskFragment : BottomSheetDialogFragment() {
             showDatePickerDialog(requireContext()) { date, calender ->
                 binding.selectDateTv.text = date
                 dateCalendar.set(Calendar.YEAR, calender.get(Calendar.YEAR))
-                dateCalendar.set(Calendar.MONTH, calender.get(Calendar.MONTH - 2))
+                dateCalendar.set(Calendar.MONTH, calender.get(Calendar.MONTH))
                 dateCalendar.set(Calendar.DAY_OF_MONTH, calender.get(Calendar.DAY_OF_MONTH))
                 dateCalendar.clearTime()
             }
@@ -57,30 +61,32 @@ class AddTaskFragment : BottomSheetDialogFragment() {
     }
     private fun onSelectTimeCalender() {
         binding.selectTimeTv.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            showTimePickerDialog(calendar.get(Calendar.HOUR),calendar.get(Calendar.MINUTE),"Select Time:",childFragmentManager){hour,minute->
-                binding.selectTimeTv.text = getFormattedTime(hour,minute)
-                timeCalender.set(Calendar.HOUR,hour)
-                timeCalender.set(Calendar.MINUTE,minute)
-                timeCalender.clearDate()
+            showTimePickerDialog(calendar.get(Calendar.HOUR),calendar.get(Calendar.MINUTE),
+                "Select Time:", childFragmentManager) { hour, minute ->
+                binding.selectTimeTv.text = getFormattedTime(hour, minute)
+                timeCalender.set(Calendar.HOUR, hour)
+                timeCalender.set(Calendar.MINUTE, minute)
                 timeCalender.clearSeconds()
             }
         }
     }
-    fun OnAddTaskClick (){
+    fun OnAddTaskClick () {
         binding.addTaskBtn.setOnClickListener {
             if (!validateInput())
                 return@setOnClickListener
 
             val task = createTask()
-            dao.insertNewTask(task)
-            Log.e("TAG","$task")
-            onTaskAdded?.onAddTask(task)
-            dao.getAllTasks()
-            Log.e("TAG","${dao.getAllTasks()}")
-            dismiss()
-        }
+            lifecycleScope.launch {
+                dao.insertNewTask(task)
+                Log.e("TAG", "$task")
+                onTaskAdded?.onAddTask(task)
 
+                val allTasks = dao.getAllTasks()
+                Log.e("TAG", "$allTasks")
+
+                dismiss()
+            }
+        }
     }
 
     private fun createTask():Task{

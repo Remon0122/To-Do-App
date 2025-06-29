@@ -10,23 +10,24 @@ import com.example.todo.database.models.entity.Task
 @Dao
 interface TaskDao {
     @Insert
-    fun insertNewTask(task: Task)
+    suspend fun insertNewTask(task: Task)
 
     @Delete
-    fun deleteTask(task: Task)
+    suspend fun deleteTask(task: Task)
 
     @Update
-    fun updateTask(task: Task)
+    suspend fun updateTask(task: Task)
 
     @Query("select * from task")
-    fun getAllTasks():List<Task>
+    suspend fun getAllTasks():List<Task>
 
     @Query("select * from task where date = :date")
-    fun getAllTasksByDate(date:Long):List<Task>
+    suspend fun getAllTasksByDate(date:Long):List<Task>
 
     @Query("select * from task where id = :id")
-    fun getTaskById(id:Int): Task?
+    suspend fun getTaskById(id:Int): Task?
 
     @Query("select * from task where isDone = 0")
-    fun getUnCompletedTasks():List<Task>
+   suspend fun getUnCompletedTasks():List<Task>
+
 }
